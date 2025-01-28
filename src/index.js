@@ -60,15 +60,6 @@ popupAddCard.addEventListener('click', closeOnOverlayClick);
 popupViewImage.addEventListener('click', closeOnOverlayClick);
 
 
-
-/*document.addEventListener('keydown', (event) => {
-  if(event.key === 'Escape') {
-    if (Array.isArray(popups)) {
-      popups.forEach(popup => closePopup(popup));
-    }
-  }
-});*/
-
 const formElement = popupEdit.querySelector('.popup__form');
 
 const nameInput = formElement.querySelector('.popup__input_type_name');
