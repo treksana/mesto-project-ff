@@ -11,7 +11,7 @@
 import './styles/index.css';
 import { initialCards } from './scripts/cards.js';
 import {createCard, deleteCard, likeCard} from './scripts/card.js';
-import {openPopup, closePopup, closeOnOverlayClick, handleEscClose} from './scripts/modal.js';
+import {openPopup, closePopup, closeOnOverlayClick} from './scripts/modal.js';
 
 
 const cardsContainer = document.querySelector('.places__list');
@@ -38,11 +38,13 @@ popupViewImage.querySelector('.popup__close').addEventListener('click', () => cl
 
 const popups = [popupEdit, popupAddCard, popupViewImage];
 
-popups.forEach(popup => {
-    popup.addEventListener('click', (event) => closeOnOverlayClick(event, popups));
+popups.forEach((popup) => {
+    popup.addEventListener('click', closeOnOverlayClick);
 });
 
-document.addEventListener('keydown', (event) => handleEscClose(event, popups));
+popups.forEach((popup) => {
+  popup.classList.add('popup_is-animated');
+})
 
 function openPopupImage(link, name) {
   const popupImageElement = document.querySelector('.popup__image');
@@ -55,15 +57,10 @@ function openPopupImage(link, name) {
   openPopup(popupViewImage);
 }
 
-popupEdit.addEventListener('click', closeOnOverlayClick);
-popupAddCard.addEventListener('click', closeOnOverlayClick);
-popupViewImage.addEventListener('click', closeOnOverlayClick);
+const profileFormElement = popupEdit.querySelector('.popup__form');
 
-
-const formElement = popupEdit.querySelector('.popup__form');
-
-const nameInput = formElement.querySelector('.popup__input_type_name');
-const jobInput = formElement.querySelector('.popup__input_type_description');
+const nameInput = profileFormElement.querySelector('.popup__input_type_name');
+const jobInput = profileFormElement.querySelector('.popup__input_type_description');
 
 const currentName = document.querySelector('.profile__title');
 const currentJob = document.querySelector('.profile__description');
@@ -77,7 +74,7 @@ function openProfilePopup() {
   openPopup(popupEdit);
 }
 
-function handleNameFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   const name = nameInput.value;
@@ -91,7 +88,7 @@ function handleNameFormSubmit(evt) {
   closePopup(popupEdit);
 }
 
-formElement.addEventListener('submit', handleNameFormSubmit);
+profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
 buttonEdit.addEventListener('click', openProfilePopup);
 
