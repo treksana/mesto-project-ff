@@ -1,0 +1,28 @@
+.profile__image_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(0 0 0 /0.8);
+    z-index: 5;
+    visibility: hidden;
+    width: 117px;
+    height: 117px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.profile__image_overlay::before {
+    content: ""; 
+    background: url('../../../../images/edit-icon-big.svg') center no-repeat;
+    width: 26px; 
+    height: 26px; 
+}

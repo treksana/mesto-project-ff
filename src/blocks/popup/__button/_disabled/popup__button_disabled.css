@@ -1,0 +1,11 @@
+.popup__button_disabled {
+    background: #fff;
+    color: rgba(0, 0, 0, 0.15);
+    border: solid 2px rgba(0, 0, 0, 0.15);
+  }
+
+  .popup__button_disabled:hover {
+    border: solid 2px rgba(0, 0, 0, 0.15);
+    background: #fff;
+    cursor: not-allowed;
+  }
