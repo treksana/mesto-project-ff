@@ -1,24 +1,24 @@
 const config = {
-    //baseURL: 'https://nomoreparties.co/v1/wff-cohort-30',
     baseURL: 'https://nomoreparties.co/v1/wff-cohort-32',
     headers: {
-        //authorization: '840566ea-c6e4-4c2f-b802-9f6fd9b50325',
         authorization: '22e04659-805d-44c0-ad1a-8811974e7812',
         'Content-Type': 'application/json; charset=UTF-8'
       }
 };
+
+const handleResponse = (res) => {
+    if(res.ok) {
+        return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+}
 
 const getUserInfoFromServer = () => {
     return fetch(`${config.baseURL}/users/me`, {
         method: "GET",
         headers: config.headers
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 const getCardsFromServer = () => {
@@ -26,12 +26,7 @@ const getCardsFromServer = () => {
         method: "GET",
         headers: config.headers
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 const editProfile = (name, about) => {
@@ -43,12 +38,7 @@ const editProfile = (name, about) => {
             about
         })
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 const editProfilePicture = (avatar) => {
@@ -59,12 +49,7 @@ const editProfilePicture = (avatar) => {
             avatar
         })
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 const addCard = (name, link) => {
@@ -76,12 +61,7 @@ const addCard = (name, link) => {
             link,
         })
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 const addLikeOnCard = (cardId) => {
@@ -89,12 +69,7 @@ const addLikeOnCard = (cardId) => {
         method: "PUT",
         headers: config.headers
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 const removeLikeOnCard = (cardId) => {
@@ -102,12 +77,7 @@ const removeLikeOnCard = (cardId) => {
         method: "DELETE",
         headers: config.headers
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 const deleteCardFromServer = (cardId) => {
@@ -115,12 +85,7 @@ const deleteCardFromServer = (cardId) => {
         method: "DELETE",
         headers: config.headers
     })
-    .then((res) => {
-        if(res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then((res) => handleResponse(res));
 }
 
 export {getUserInfoFromServer, getCardsFromServer, editProfile, editProfilePicture, addCard, addLikeOnCard, removeLikeOnCard, deleteCardFromServer}

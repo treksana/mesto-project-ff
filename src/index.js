@@ -27,13 +27,14 @@ function displayCards(initialCards) {
 Promise.all([getUserInfoFromServer(), getCardsFromServer()])
   .then(([userInfo, cards]) => {
     userId = userInfo._id;
-        displayCards(cards);
+    profileImage.style.backgroundImage = `url(${userInfo.avatar})`;
+    currentName.textContent = userInfo.name;
+    currentJob.textContent = userInfo.about;
+    displayCards(cards);
     })
-    .catch(err => {
-      console.log(err);
-    })
-
-
+  .catch(err => {
+    console.log(err);
+  })
 
 const buttonEdit = document.querySelector('.profile__edit-button');
 const buttonAddCard = document.querySelector('.profile__add-button');
@@ -82,9 +83,11 @@ const profileImage = document.querySelector('.profile__image');
 
 const saveButton = document.querySelectorAll('.popup__button');
 
-function openProfilePopup() {
+let userInfo;
 
-  getUserInfoFromServer()
+function openProfilePopup() {
+  if(!userInfo) {
+    getUserInfoFromServer()
     .then(data => {
       nameInput.value = data.name;
       jobInput.value = data.about;
@@ -92,6 +95,11 @@ function openProfilePopup() {
     .catch(err => {
       console.log(err);
     })
+  } else {
+    nameInput.value = userInfo.name;
+    jobInput.value = userInfo.about;
+  }
+  
 
   openPopup(popupEdit);
   clearValidation(profileFormElement, validationConfig);
@@ -121,22 +129,9 @@ function handleProfileFormSubmit(evt) {
 }
 
 
-
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
 buttonEdit.addEventListener('click', openProfilePopup);
-
-function initProfile() {
-  getUserInfoFromServer()
-      .then(data => {
-          profileImage.style.backgroundImage = `url(${data.avatar})`;
-          currentName.textContent = data.name;
-          currentJob.textContent = data.about;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-}
 
 
 const newCardForm = popupAddCard.querySelector('.popup__form');
@@ -220,5 +215,3 @@ function handleAvatarFormSubmit(evt) {
 changeAvatarForm.addEventListener('submit', handleAvatarFormSubmit);
 
 buttonChangeAvatar.addEventListener('click', openChangeAvatarPopup);
-
-initProfile();

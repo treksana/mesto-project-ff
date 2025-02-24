@@ -14,44 +14,54 @@ function createCard({ _id, name, link, owner, likes }, openPopupImage, userId) {
 
     cardLikesCount.textContent = likes.length;
 
+    
     if (owner._id === userId) {
         buttonDelete.classList.remove('card__delete-button-hidden');
+        buttonDelete.addEventListener('click', () => { deleteCallback (_id, cardElement)});
     } else {
         buttonDelete.classList.add('card__delete-button-hidden');
     }
 
-    if (likes && likes.some(like => like._id === userId)) {
-        buttonLike.classList.add('card__like-button_is-active');
-    }
+
+    const isLiked = likes && likes.some(like => like._id === userId);
+    updateLikeButton(buttonLike, cardLikesCount, isLiked, likes.length);
+
+    buttonLike.addEventListener('click', () => {
+        const currentIsLiked = buttonLike.classList.contains('card__like-button_is-active');
+        handleLike(_id, buttonLike, cardLikesCount, currentIsLiked);
+    });
+
 
     cardImage.addEventListener('click', () => openPopupImage(link, name));
 
-    buttonDelete.addEventListener('click', () => {
-        deleteCardFromServer(_id)
-        .then(() => {
-            cardElement.remove();
-        })
-        .catch(err => console.error(err));
-    });
-
-    buttonLike.addEventListener('click', () => {
-        if (buttonLike.classList.contains('card__like-button_is-active')) {
-            removeLikeOnCard(_id)
-            .then(updatedCard => {
-                buttonLike.classList.remove('card__like-button_is-active');
-                cardLikesCount.textContent = updatedCard.likes.length;
-            })
-            .catch(err => console.error(err));
-        } else {
-            addLikeOnCard(_id).then(updatedCard => {
-                buttonLike.classList.add('card__like-button_is-active');
-                cardLikesCount.textContent = updatedCard.likes.length; 
-            })
-            .catch(err => console.error(err));
-        }
-    });
-
     return cardElement;
+
 }
+
+const deleteCallback = (id, cardElement) => {
+    deleteCardFromServer(id)
+    .then(() => { 
+             cardElement.remove(); 
+    }) 
+    .catch(err => console.error(err));
+ }
+
+
+const handleLike = (cardId, buttonLike, cardLikesCount, isLiked) => {
+    const likeMethod = isLiked ? removeLikeOnCard : addLikeOnCard;
+
+    likeMethod(cardId)
+        .then(updatedCard => {
+            const newIsLiked = !isLiked;
+            updateLikeButton(buttonLike, cardLikesCount, newIsLiked, updatedCard.likes.length);
+        })
+        .catch(err => console.log(err));
+};
+
+const updateLikeButton = (buttonLike, cardLikesCount, isLiked, likesCount) => {
+    buttonLike.classList.toggle('card__like-button_is-active', isLiked);
+    cardLikesCount.textContent = likesCount;
+};
+
 
 export { createCard };
