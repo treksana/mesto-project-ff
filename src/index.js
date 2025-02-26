@@ -17,16 +17,16 @@ import { getUserInfoFromServer, getCardsFromServer, addCard, editProfile, editPr
 
 const cardsContainer = document.querySelector('.places__list');
 
-let userId;
+let currentUser;
 
 function displayCards(initialCards) {
-  const cardElements = initialCards.map(card => createCard(card, openPopupImage, userId));
+  const cardElements = initialCards.map(card => createCard(card, openPopupImage, currentUser._id));
   cardsContainer.append(...cardElements);
 }
 
 Promise.all([getUserInfoFromServer(), getCardsFromServer()])
   .then(([userInfo, cards]) => {
-    userId = userInfo._id;
+    currentUser = userInfo;
     profileImage.style.backgroundImage = `url(${userInfo.avatar})`;
     currentName.textContent = userInfo.name;
     currentJob.textContent = userInfo.about;
@@ -83,10 +83,9 @@ const profileImage = document.querySelector('.profile__image');
 
 const saveButton = document.querySelectorAll('.popup__button');
 
-let userInfo;
 
 function openProfilePopup() {
-  if(!userInfo) {
+  if(!currentUser) {
     getUserInfoFromServer()
     .then(data => {
       nameInput.value = data.name;
@@ -96,8 +95,8 @@ function openProfilePopup() {
       console.log(err);
     })
   } else {
-    nameInput.value = userInfo.name;
-    jobInput.value = userInfo.about;
+    nameInput.value = currentUser.name;
+    jobInput.value = currentUser.about;
   }
   
 
@@ -115,6 +114,8 @@ function handleProfileFormSubmit(evt) {
   
   editProfile(name, job)
     .then(data => {
+      currentUser.name = data.name;
+      currentUser.about = data.about;
       currentName.textContent = data.name;
       currentJob.textContent = data.about;
 
@@ -146,7 +147,7 @@ newCardForm.addEventListener('submit', (evt) => {
 
   addCard(newCardName, newCardLink)
       .then(newCardData => {
-          const newCard = createCard(newCardData, openPopupImage, userId);
+        const newCard = createCard(newCardData, openPopupImage, currentUser._id);
           cardsContainer.prepend(newCard);
           closePopup(popupAddCard);
           clearValidation(newCardForm, validationConfig);

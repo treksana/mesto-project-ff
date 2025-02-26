@@ -14,27 +14,16 @@ const hideInputError = (formElement, inputElement, settings) => {
 
 
 const checkInputValidity = (formElement, inputElement, settings) => {
-  const value = inputElement.value.trim();
-
-  let errorMessage = '';
-
-
-  if (inputElement.pattern && value) {
-    const regex = new RegExp(inputElement.pattern);
-    if (!regex.test(value)) {
-        errorMessage = inputElement.dataset.errorMessage || 'Разрешены только латинские и кириллические буквы, знаки дефиса и пробелы.';
-    }
-  }
-
-  if (!inputElement.validity.valid) {
-    errorMessage = inputElement.validationMessage;
-  }
-
-  
-  if (errorMessage) {
-      showInputError(formElement, inputElement, errorMessage, settings);
+  if (inputElement.validity.patternMismatch) {
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   } else {
-      hideInputError(formElement, inputElement, settings);
+    inputElement.setCustomValidity("");
+  }
+  
+  if (!inputElement.validity.valid) {
+    showInputError(formElement, inputElement, inputElement.validationMessage, settings);
+  } else {
+    hideInputError(formElement, inputElement, settings);
   }
 };
 
